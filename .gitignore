@@ -1,0 +1,70 @@
+# Flutter
+.dart_tool/
+.packages/
+.pub-cache/
+.pub/
+.idea/
+.build/
+*.log
+
+# Android
+android/app/debug/
+android/app/release/
+android/app/profile/
+android/app/*.apk
+android/app/*.aab
+android/app/*.jks
+android/app/*.p12
+android/app/*.der
+android/app/*.pem
+android/app/src/main/assets/debug/
+android/app/key.properties
+
+# iOS
+ios/Pods/
+ios/Runner/Info.plist
+ios/*.xcworkspace
+ios/*.xcuserstate
+ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Linux (Desktop)
+build/linux/
+build/linux/*/release/
+build/linux/*/debug/
+build/linux/*/generated/
+build/linux/*/*.timestamp
+
+# macOS (Desktop)
+build/macos/
+build/macos/*/release/
+build/macos/*/debug/
+build/macos/*/*.xcarchive
+
+# Windows (Desktop)
+build/windows/
+build/windows/*/release/
+build/windows/*/debug/
+
+# Cross-platform build
+build/
+
+# Testing
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugins-dependencies.lock
+
+# Cache
+.flutter_cache/
+
+# IDE
+.idea/
+*.iml
+*.swp
+.vscode/
+
+# Project-specific
+android/local.properties
+ios/Flutter/App.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/engine/
+io
