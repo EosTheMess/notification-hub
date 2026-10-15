@@ -139,7 +139,7 @@ jobs:
     runs-on: macos-latest
     needs: analyze-and-test
     timeout-minutes: 30
-    if: runner.os == 'macOS'
+    if: ${{ runner.os == 'macOS' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
