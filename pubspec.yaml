@@ -16,7 +16,7 @@ dependencies:
   json_annotation: ^4.9.0
 
   # Networking & Discovery
-  bonsoir: ^2.2.1          # mDNS/Bonjour service discovery
+  bonsoir: ^5.1.11         # mDNS/Bonjour service discovery (updated)
   web_socket_channel: ^2.4.5
   http: ^1.2.1
 
