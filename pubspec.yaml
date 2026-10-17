@@ -17,7 +17,6 @@ dependencies:
 
   # Networking & Discovery
   bonsoir: ^2.2.1          # mDNS/Bonjour service discovery
-  dart_mdns: ^1.0.0        # Alternative mDNS implementation
   web_socket_channel: ^2.4.5
   http: ^1.2.1
 
