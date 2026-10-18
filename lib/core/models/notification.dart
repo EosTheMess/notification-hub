@@ -55,28 +55,7 @@ sealed class NotificationModel with _$NotificationModel {
     String? quickReplyPlaceholder,
     List<String>? quickReplyChoices,
     List<NotificationAction>? actions,
-  }) {
-    return NotificationModel(
-      id: _uuid.v4(),
-      sourceDeviceId: sourceDeviceId,
-      appName: appName,
-      title: title,
-      content: content,
-      timestamp: timestamp ?? DateTime.now(),
-      isRead: false,
-      hasAttachment: hasAttachment,
-      attachmentPath: attachmentPath,
-      attachmentMimeType: attachmentMimeType,
-      packageName: packageName,
-      notificationId: notificationId,
-      tags: tags ?? [],
-      extras: extras ?? {},
-      supportsQuickReply: supportsQuickReply,
-      quickReplyPlaceholder: quickReplyPlaceholder,
-      quickReplyChoices: quickReplyChoices,
-      actions: actions ?? [],
-    );
-  }
+  }) = _NotificationModel;
 }
 
 @freezed
