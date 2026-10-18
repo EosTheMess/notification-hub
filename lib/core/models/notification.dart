@@ -146,7 +146,7 @@ sealed class DeviceModel with _$DeviceModel {
     required DevicePlatform platform,
     required String localIp,
     int? port,
-    DevicePermissions permissions = DevicePermissions.readOnly,
+    @Default(DevicePermissions.readOnly) DevicePermissions permissions,
     String? publicKey,
   }) = _DeviceModel;
 }
