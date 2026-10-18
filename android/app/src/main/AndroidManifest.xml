@@ -1,16 +1,35 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.notificationhub">
 
+    <!-- Core permissions -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    
+    <!-- Location for local network discovery (Android 10+) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    
+    <!-- Bluetooth permissions (Android 12+) -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
+    
+    <!-- Notification permissions (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    
+    <!-- Storage permissions (Android 10-12) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
+    
+    <!-- Media permissions (Android 13+) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    
+    <!-- Vibration -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:label="Notification Hub"
@@ -46,13 +65,13 @@
             </intent-filter>
         </service>
 
-        <!-- WebSocket Server Service -->
+        <!-- WebSocket Network Service -->
         <service
             android:name=".NetworkService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
-        <!-- WorkManager for background notifications -->
+        <!-- Broadcast Receiver for notifications -->
         <receiver
             android:name=".NotificationReceiver"
             android:exported="false">

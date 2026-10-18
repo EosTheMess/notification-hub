@@ -8,8 +8,6 @@ import android.service.notification.StatusBarNotification
 import android.os.Bundle
 import android.util.Log
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
 import org.json.JSONArray
 
@@ -173,58 +171,5 @@ class NotificationListenerService : NotificationListenerService() {
             prefs.edit().putString("device_id", deviceId).apply()
         }
         return deviceId
-    }
-}
-
-// Platform channel handler for Flutter communication
-class NotificationListenerPlugin : MethodCallHandler {
-    private var listenerService: NotificationListenerService? = null
-
-    override fun onMethodCall(call: MethodChannel.MethodCall, result: Result) {
-        when (call.method) {
-            "initialize" -> {
-                // Service is started separately via Android manifest
-                result.success(null)
-            }
-            "requestPermission" -> {
-                val intent = android.content.Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
-                intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
-                result.success(null)
-            }
-            "checkPermission" -> {
-                val enabled = isNotificationListenerEnabled()
-                result.success(enabled)
-            }
-            "dismissNotification" -> {
-                val args = call.arguments as Map<String, Any>
-                val packageName = args["packageName"] as String
-                val notificationId = args["notificationId"] as Int
-                listenerService?.dismissNotification(packageName, notificationId)
-                result.success(null)
-            }
-            "replyToNotification" -> {
-                val args = call.arguments as Map<String, Any>
-                val packageName = args["packageName"] as String
-                val notificationId = args["notificationId"] as Int
-                val replyText = args["replyText"] as String
-                listenerService?.replyToNotification(packageName, notificationId, replyText)
-                result.success(null)
-            }
-            else -> result.notImplemented()
-        }
-    }
-
-    private fun isNotificationListenerEnabled(): Boolean {
-        val packageName = applicationContext.packageName
-        val flat = android.provider.Settings.Secure.getString(
-            applicationContext.contentResolver,
-            "enabled_notification_listeners"
-        ) ?: ""
-        return flat.contains(packageName)
-    }
-
-    fun setListenerService(service: NotificationListenerService) {
-        listenerService = service
     }
 }
