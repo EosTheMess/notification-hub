@@ -14,6 +14,7 @@ dependencies:
   riverpod: ^2.5.1
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
+  riverpod_annotation: ^2.5.0
 
   # Networking & Discovery
   bonsoir: ^5.1.11         # mDNS/Bonjour service discovery (updated)

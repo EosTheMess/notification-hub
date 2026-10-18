@@ -48,7 +48,39 @@ sealed class NetworkMessage {
   });
 
   Map<String, dynamic> toJson();
-  factory NetworkMessage.fromJson(Map<String, dynamic> json);
+
+  // Use a static method instead of factory on sealed class
+  static NetworkMessage fromJson(Map<String, dynamic> json) {
+    final typeStr = json['type'] as String?;
+    if (typeStr == null) {
+      throw FormatException('Missing type field in message');
+    }
+    final type = MessageType.values.firstWhere(
+      (e) => e.name == typeStr,
+      orElse: () => MessageType.error,
+    );
+
+    switch (type) {
+      case MessageType.notification:
+        return NotificationMessage.fromJson(json);
+      case MessageType.notificationBatch:
+        return NotificationBatchMessage.fromJson(json);
+      case MessageType.action:
+        return ActionMessage.fromJson(json);
+      case MessageType.pairingRequest:
+        return PairingRequestMessage.fromJson(json);
+      case MessageType.pairingResponse:
+        return PairingResponseMessage.fromJson(json);
+      case MessageType.heartbeat:
+        return HeartbeatMessage.fromJson(json);
+      case MessageType.deviceInfo:
+        return DeviceInfoMessage.fromJson(json);
+      case MessageType.error:
+        return ErrorMessage.fromJson(json);
+      default:
+        throw FormatException('Unknown message type: $typeStr');
+    }
+  }
 }
 
 /// Notification message
@@ -72,8 +104,7 @@ class NotificationMessage extends NetworkMessage {
     'notification': notification.toJson(),
   };
 
-  @override
-  factory NetworkMessage.fromJson(Map<String, dynamic> json) => NotificationMessage(
+  factory NotificationMessage.fromJson(Map<String, dynamic> json) => NotificationMessage(
     id: json['id'] as String,
     timestamp: DateTime.parse(json['timestamp'] as String),
     sourceDeviceId: json['sourceDeviceId'] as String,
@@ -102,8 +133,7 @@ class NotificationBatchMessage extends NetworkMessage {
     'notifications': notifications.map((n) => n.toJson()).toList(),
   };
 
-  @override
-  factory NetworkMessage.fromJson(Map<String, dynamic> json) => NotificationBatchMessage(
+  factory NotificationBatchMessage.fromJson(Map<String, dynamic> json) => NotificationBatchMessage(
     id: json['id'] as String,
     timestamp: DateTime.parse(json['timestamp'] as String),
     sourceDeviceId: json['sourceDeviceId'] as String,
@@ -138,8 +168,7 @@ class ActionMessage extends NetworkMessage {
     'payload': payload,
   };
 
-  @override
-  factory NetworkMessage.fromJson(Map<String, dynamic> json) => ActionMessage(
+  factory ActionMessage.fromJson(Map<String, dynamic> json) => ActionMessage(
     id: json['id'] as String,
     timestamp: DateTime.parse(json['timestamp'] as String),
     sourceDeviceId: json['sourceDeviceId'] as String,
@@ -170,8 +199,7 @@ class PairingRequestMessage extends NetworkMessage {
     'pairingData': pairingData.toJson(),
   };
 
-  @override
-  factory NetworkMessage.fromJson(Map<String, dynamic> json) => PairingRequestMessage(
+  factory PairingRequestMessage.fromJson(Map<String, dynamic> json) => PairingRequestMessage(
     id: json['id'] as String,
     timestamp: DateTime.parse(json['timestamp'] as String),
     sourceDeviceId: json['sourceDeviceId'] as String,
@@ -206,8 +234,7 @@ class PairingResponseMessage extends NetworkMessage {
     'error': error,
   };
 
-  @override
-  factory NetworkMessage.fromJson(Map<String, dynamic> json) => PairingResponseMessage(
+  factory PairingResponseMessage.fromJson(Map<String, dynamic> json) => PairingResponseMessage(
     id: json['id'] as String,
     timestamp: DateTime.parse(json['timestamp'] as String),
     sourceDeviceId: json['sourceDeviceId'] as String,
@@ -234,8 +261,7 @@ class HeartbeatMessage extends NetworkMessage {
     'sourceDeviceId': sourceDeviceId,
   };
 
-  @override
-  factory NetworkMessage.fromJson(Map<String, dynamic> json) => HeartbeatMessage(
+  factory HeartbeatMessage.fromJson(Map<String, dynamic> json) => HeartbeatMessage(
     id: json['id'] as String,
     timestamp: DateTime.parse(json['timestamp'] as String),
     sourceDeviceId: json['sourceDeviceId'] as String,
@@ -263,8 +289,7 @@ class DeviceInfoMessage extends NetworkMessage {
     'deviceInfo': deviceInfo.toJson(),
   };
 
-  @override
-  factory NetworkMessage.fromJson(Map<String, dynamic> json) => DeviceInfoMessage(
+  factory DeviceInfoMessage.fromJson(Map<String, dynamic> json) => DeviceInfoMessage(
     id: json['id'] as String,
     timestamp: DateTime.parse(json['timestamp'] as String),
     sourceDeviceId: json['sourceDeviceId'] as String,
@@ -296,8 +321,7 @@ class ErrorMessage extends NetworkMessage {
     'message': message,
   };
 
-  @override
-  factory NetworkMessage.fromJson(Map<String, dynamic> json) => ErrorMessage(
+  factory ErrorMessage.fromJson(Map<String, dynamic> json) => ErrorMessage(
     id: json['id'] as String,
     timestamp: DateTime.parse(json['timestamp'] as String),
     sourceDeviceId: json['sourceDeviceId'] as String,
@@ -313,7 +337,7 @@ class NetworkService {
   final StreamController<NetworkMessage> _messageController = StreamController.broadcast();
   final Map<String, WebSocketChannel> _connections = {};
   final Map<String, Timer> _heartbeatTimers = {};
-  
+
   BonsoirService? _bonsoirService;
   BonsoirBroadcast? _broadcast;
   HttpServer? _server;
@@ -429,21 +453,19 @@ class NetworkService {
 
   void _handleWebSocketChannel(WebSocketChannel channel) {
     String? remoteDeviceId;
-    
+
     channel.stream.listen(
       (data) {
         try {
           final json = jsonDecode(data as String);
-          final message = _parseMessage(json);
-          
-          if (message != null) {
-            remoteDeviceId ??= message.sourceDeviceId;
-            _messageController.add(message);
-            
-            // Handle pairing requests automatically
-            if (message is PairingRequestMessage) {
-              _handlePairingRequest(message, channel);
-            }
+          final message = NetworkMessage.fromJson(json);
+
+          remoteDeviceId ??= message.sourceDeviceId;
+          _messageController.add(message);
+
+          // Handle pairing requests automatically
+          if (message is PairingRequestMessage) {
+            _handlePairingRequest(message, channel);
           }
         } catch (e) {
           print('Error parsing message: $e');
@@ -460,37 +482,6 @@ class NetworkService {
         print('WebSocket error: $error');
       },
     );
-  }
-
-  NetworkMessage? _parseMessage(Map<String, dynamic> json) {
-    final typeStr = json['type'] as String?;
-    if (typeStr == null) return null;
-    
-    final type = MessageType.values.firstWhere(
-      (e) => e.name == typeStr,
-      orElse: () => MessageType.error,
-    );
-
-    switch (type) {
-      case MessageType.notification:
-        return NotificationMessage.fromJson(json);
-      case MessageType.notificationBatch:
-        return NotificationBatchMessage.fromJson(json);
-      case MessageType.action:
-        return ActionMessage.fromJson(json);
-      case MessageType.pairingRequest:
-        return PairingRequestMessage.fromJson(json);
-      case MessageType.pairingResponse:
-        return PairingResponseMessage.fromJson(json);
-      case MessageType.heartbeat:
-        return HeartbeatMessage.fromJson(json);
-      case MessageType.deviceInfo:
-        return DeviceInfoMessage.fromJson(json);
-      case MessageType.error:
-        return ErrorMessage.fromJson(json);
-      default:
-        return null;
-    }
   }
 
   void _handlePairingRequest(PairingRequestMessage message, WebSocketChannel channel) {
@@ -548,7 +539,7 @@ class NetworkService {
 
   void _connectToService(BonsoirService service) {
     if (service.attributes['deviceId'] == _deviceId) return; // Skip self
-    
+
     final host = service.host?.address ?? '';
     final port = service.port;
     if (host.isEmpty) return;
@@ -560,12 +551,12 @@ class NetworkService {
     try {
       final channel = IOWebSocketChannel.connect('ws://$host:$port');
       _connections[host] = channel; // Temporary key, will be updated on first message
-      
+
       channel.stream.listen(
         (data) {
           try {
             final json = jsonDecode(data as String);
-            final message = _parseMessage(json);
+            final message = NetworkMessage.fromJson(json);
             if (message != null) {
               final deviceId = message.sourceDeviceId;
               if (_connections[host] != null && deviceId != host) {

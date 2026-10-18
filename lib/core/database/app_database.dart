@@ -26,7 +26,7 @@ class Notifications extends Table {
   TextColumn get extras => text().withDefault(const Constant('{}'))(); // JSON object
   BoolColumn get supportsQuickReply => boolean().withDefault(const Constant(false))();
   TextColumn get quickReplyPlaceholder => text().nullable()();
-  TextColumn get quickReplyChoices => text().nullable(); // JSON array
+  TextColumn get quickReplyChoices => text().nullable()(); // JSON array
   TextColumn get actions => text().withDefault(const Constant('[]'))(); // JSON array
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
@@ -34,13 +34,13 @@ class Notifications extends Table {
   @override
   Set<Column> get primaryKey => {id};
 
-  // Indexes for common queries
+  // Indexes for common queries - using proper Drift index syntax
   @override
-  List<String> get customConstraints => [
-    'INDEX idx_notifications_device_time ON notifications(source_device_id, timestamp DESC)',
-    'INDEX idx_notifications_app_time ON notifications(app_name, timestamp DESC)',
-    'INDEX idx_notifications_read ON notifications(is_read, timestamp DESC)',
-    'INDEX idx_notifications_unread_device ON notifications(source_device_id, is_read, timestamp DESC)',
+  List<Index> get indexes => [
+    Index(name: 'idx_notifications_device_time', columns: {sourceDeviceId, timestamp}, unique: false),
+    Index(name: 'idx_notifications_app_time', columns: {appName, timestamp}, unique: false),
+    Index(name: 'idx_notifications_read', columns: {isRead, timestamp}, unique: false),
+    Index(name: 'idx_notifications_unread_device', columns: {sourceDeviceId, isRead, timestamp}, unique: false),
   ];
 }
 
@@ -134,7 +134,7 @@ class AppDatabase extends _$AppDatabase {
     int? offset,
   }) {
     var query = select(notifications);
-    
+
     if (deviceId != null) {
       query = query..where((t) => t.sourceDeviceId.equals(deviceId));
     }
@@ -144,13 +144,13 @@ class AppDatabase extends _$AppDatabase {
     if (since != null) {
       query = query..where((t) => t.timestamp.isBiggerOrEqualValue(since));
     }
-    
+
     query = query..orderBy([(t) => OrderingTerm.desc(t.timestamp)]);
-    
+
     if (limit != null) {
       query = query..limit(limit, offset: offset);
     }
-    
+
     return query.watch();
   }
 
@@ -162,7 +162,7 @@ class AppDatabase extends _$AppDatabase {
     int? offset,
   }) {
     var query = select(notifications);
-    
+
     if (deviceId != null) {
       query = query..where((t) => t.sourceDeviceId.equals(deviceId));
     }
@@ -172,13 +172,13 @@ class AppDatabase extends _$AppDatabase {
     if (since != null) {
       query = query..where((t) => t.timestamp.isBiggerOrEqualValue(since));
     }
-    
+
     query = query..orderBy([(t) => OrderingTerm.desc(t.timestamp)]);
-    
+
     if (limit != null) {
       query = query..limit(limit, offset: offset);
     }
-    
+
     return query.get();
   }
 
@@ -203,7 +203,7 @@ class AppDatabase extends _$AppDatabase {
       (delete(devices)..where((t) => t.id.equals(id))).go();
 
   Future<DeviceEntity?> getDevice(String id) =>
-      (select(devices)..where((t) => t.id.equals(id))).getSingleOrNull();
+      (select(devices)...where((t) => t.id.equals(id))).getSingleOrNull();
 
   Stream<List<DeviceEntity>> watchDevices({DeviceConnectionState? state}) {
     var query = select(devices);
@@ -240,7 +240,7 @@ class AppDatabase extends _$AppDatabase {
   Future<FilterSettingsEntity> getFilterSettings() async {
     final result = await (select(filterSettingsTable)..limit(1)).getSingleOrNull();
     if (result != null) return result;
-    
+
     // Create default settings
     await into(filterSettingsTable).insert(
       FilterSettingsTableCompanion.insert(
