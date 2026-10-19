@@ -36,26 +36,46 @@ sealed class NotificationModel with _$NotificationModel {
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) =>
       _$NotificationModelFromJson(json);
+}
 
-  // Factory for creating new notifications with generated IDs
-  factory NotificationModel.create({
-    required String sourceDeviceId,
-    required String appName,
-    required String title,
-    required String content,
-    DateTime? timestamp,
-    @Default(false) bool hasAttachment,
-    String? attachmentPath,
-    String? attachmentMimeType,
-    String? packageName,
-    int? notificationId,
-    List<String>? tags,
-    Map<String, dynamic>? extras,
-    @Default(false) bool supportsQuickReply,
-    String? quickReplyPlaceholder,
-    List<String>? quickReplyChoices,
-    List<NotificationAction>? actions,
-  }) = _NotificationModel;
+// Helper to create new notifications with generated ID
+NotificationModel createNotification({
+  required String sourceDeviceId,
+  required String appName,
+  required String title,
+  required String content,
+  DateTime? timestamp,
+  bool hasAttachment = false,
+  String? attachmentPath,
+  String? attachmentMimeType,
+  String? packageName,
+  int? notificationId,
+  List<String>? tags,
+  Map<String, dynamic>? extras,
+  bool supportsQuickReply = false,
+  String? quickReplyPlaceholder,
+  List<String>? quickReplyChoices,
+  List<NotificationAction>? actions,
+}) {
+  return NotificationModel(
+    id: _uuid.v4(),
+    sourceDeviceId: sourceDeviceId,
+    appName: appName,
+    title: title,
+    content: content,
+    timestamp: timestamp ?? DateTime.now(),
+    hasAttachment: hasAttachment,
+    attachmentPath: attachmentPath,
+    attachmentMimeType: attachmentMimeType,
+    packageName: packageName,
+    notificationId: notificationId,
+    tags: tags ?? [],
+    extras: extras ?? {},
+    supportsQuickReply: supportsQuickReply,
+    quickReplyPlaceholder: quickReplyPlaceholder,
+    quickReplyChoices: quickReplyChoices,
+    actions: actions ?? [],
+  );
 }
 
 @freezed
@@ -119,15 +139,27 @@ sealed class DeviceModel with _$DeviceModel {
 
   factory DeviceModel.fromJson(Map<String, dynamic> json) =>
       _$DeviceModelFromJson(json);
+}
 
-  factory DeviceModel.create({
-    required String name,
-    required DevicePlatform platform,
-    required String localIp,
-    int? port,
-    @Default(DevicePermissions.readOnly) DevicePermissions permissions,
-    String? publicKey,
-  }) = _DeviceModel;
+// Helper to create new devices with generated ID
+DeviceModel createDevice({
+  required String name,
+  required DevicePlatform platform,
+  required String localIp,
+  int? port,
+  DevicePermissions permissions = DevicePermissions.readOnly,
+  String? publicKey,
+}) {
+  return DeviceModel(
+    id: _uuid.v4(),
+    name: name,
+    platform: platform,
+    localIp: localIp,
+    port: port,
+    permissions: permissions,
+    publicKey: publicKey,
+    lastSeen: DateTime.now(),
+  );
 }
 
 enum DevicePlatform {

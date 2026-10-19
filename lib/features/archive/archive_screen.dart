@@ -1,6 +1,8 @@
 // Archive Screen
 // View and search past notifications
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -251,7 +253,7 @@ class _ArchiveNotificationCard extends StatelessWidget {
         color: NeonRushTheme.charcoal,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: notification.isRead ? NeonRushTheme.darkGray : NeonRushTheme.neonGreen.withValues(alpha: 0.3),
+          color: notification.isRead ? NeonRushTheme.darkGray : NeonRushTheme.neonGreen.withOpacity(0.3),
           width: notification.isRead ? 1 : 1.5,
         ),
         boxShadow: notification.isRead ? [] : NeonRushTheme.subtleGlow,

@@ -3,7 +3,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dbus/dbus.dart';
 import 'package:riverpod/riverpod.dart';
@@ -25,7 +24,7 @@ class LinuxNotificationListener {
   Future<void> initialize(String deviceId) async {
     _deviceId = deviceId;
     _notificationController = StreamController.broadcast();
-    
+
     try {
       _client = await DBusClient.session();
       await _setupMatchRule();
@@ -40,29 +39,28 @@ class LinuxNotificationListener {
 
   Future<void> _setupMatchRule() async {
     if (_client == null) return;
-    
+
     try {
       // Add match rule for notification signals
-      await _client!.callMethod(
-        'org.freedesktop.DBus',
-        '/org/freedesktop/DBus',
-        'org.freedesktop.DBus',
-        'AddMatch',
-        ['type="signal",interface="org.freedesktop.Notifications",member="Notify"'],
+      await _client!.requestBusName(
+        'org.freedesktop.Notifications',
+        flags: DBusNameFlags.allowReplacement | DBusNameFlags.replaceExisting,
       );
-      
-      // Listen for signals
-      _client!.onSignal.listen(_handleSignal);
+
+      // Listen for signals using the message stream
+      _client!.messageStream.listen(_handleMessage);
     } catch (e) {
       print('Failed to setup DBus match rule: $e');
     }
   }
 
-  void _handleSignal(DBusSignal signal) {
-    if (signal.member == 'Notify' && signal.interface == _interface) {
-      _parseNotification(signal.body);
-    } else if (signal.member == 'NotificationClosed') {
-      _handleNotificationClosed(signal.body);
+  void _handleMessage(DBusMessage message) {
+    if (message is DBusSignal) {
+      if (message.member == 'Notify' && message.interface == _interface) {
+        _parseNotification(message.body);
+      } else if (message.member == 'NotificationClosed') {
+        _handleNotificationClosed(message.body);
+      }
     }
   }
 
@@ -70,7 +68,7 @@ class LinuxNotificationListener {
     // Notify method signature: (susssasa{sv}i)
     // app_name, replaces_id, app_icon, summary, body, actions, hints, expire_timeout
     if (body.length < 8) return;
-    
+
     final appName = body[0] as String;
     final replacesId = body[1] as int;
     final appIcon = body[2] as String;
@@ -79,35 +77,35 @@ class LinuxNotificationListener {
     final actions = body[5] as List<dynamic>;
     final hints = body[6] as Map<dynamic, dynamic>;
     final expireTimeout = body[7] as int;
-    
+
     // Check for attachment in hints
     var hasAttachment = false;
     String? attachmentPath;
     String? attachmentMimeType;
-    
+
     if (hints.containsKey('image-path') || hints.containsKey('image-data')) {
       hasAttachment = true;
       attachmentPath = hints['image-path'] as String?;
       attachmentMimeType = 'image/png';
     }
-    
+
     // Build actions list
     final notificationActions = <NotificationAction>[];
-    
+
     // Add dismiss action
     notificationActions.add(NotificationAction(
       id: 'dismiss_$replacesId',
       label: 'Dismiss',
       type: ActionType.dismiss,
     ));
-    
+
     // Add open action
     notificationActions.add(NotificationAction(
       id: 'open_$replacesId',
       label: 'Open',
       type: ActionType.open,
     ));
-    
+
     // Parse custom actions
     for (int i = 0; i < actions.length; i += 2) {
       if (i + 1 < actions.length) {
@@ -121,8 +119,8 @@ class LinuxNotificationListener {
         ));
       }
     }
-    
-    final notification = NotificationModel.create(
+
+    final notification = createNotification(
       sourceDeviceId: _deviceId!,
       appName: appName,
       title: summary,
@@ -138,7 +136,7 @@ class LinuxNotificationListener {
       supportsQuickReply: false, // Linux notifications don't typically support quick reply
       actions: notificationActions,
     );
-    
+
     _notificationController?.add(notification);
   }
 
@@ -178,7 +176,7 @@ class LinuxNotificationListener {
 
   Future<void> dismissNotification(String packageName, int notificationId) async {
     if (_client == null) return;
-    
+
     try {
       await _client!.callMethod(
         _busName,

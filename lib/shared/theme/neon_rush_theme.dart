@@ -9,42 +9,42 @@ class NeonRushTheme {
   static const Color neonGreen = Color(0xFF00FFB4);
   static const Color neonGreenDim = Color(0x3300FFB4);
   static const Color neonGreenGlow = Color(0x8000FFB4);
-  
+
   static const Color deepBlack = Color(0xFF0A0A0A);
   static const Color charcoal = Color(0xFF141414);
   static const Color charcoalLight = Color(0xFF1E1E1E);
   static const Color charcoalLighter = Color(0xFF282828);
-  
+
   static const Color pureWhite = Color(0xFFFFFFFF);
   static const Color offWhite = Color(0xFFE0E0E0);
   static const Color grayText = Color(0xFF888888);
   static const Color darkGray = Color(0xFF444444);
-  
+
   // Semantic Colors
   static const Color success = Color(0xFF00FF88);
   static const Color warning = Color(0xFFFFB800);
   static const Color error = Color(0xFFFF3366);
   static const Color info = Color(0xFF00D4FF);
-  
+
   // Gradient Definitions
   static const LinearGradient neonGlowGradient = LinearGradient(
     colors: [neonGreen, Color(0xFF00D4AA)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const LinearGradient cardGradient = LinearGradient(
     colors: [charcoal, charcoalLight],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const LinearGradient buttonGradient = LinearGradient(
     colors: [neonGreen, Color(0xFF00CC99)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const RadialGradient glowGradient = RadialGradient(
     colors: [neonGreenGlow, Colors.transparent],
     center: Alignment.center,
@@ -59,7 +59,7 @@ class NeonRushTheme {
     letterSpacing: -0.5,
     height: 1.2,
   );
-  
+
   static TextStyle get heading2 => GoogleFonts.spaceGrotesk(
     fontSize: 24,
     fontWeight: FontWeight.w600,
@@ -67,7 +67,7 @@ class NeonRushTheme {
     letterSpacing: -0.3,
     height: 1.3,
   );
-  
+
   static TextStyle get heading3 => GoogleFonts.spaceGrotesk(
     fontSize: 20,
     fontWeight: FontWeight.w600,
@@ -75,56 +75,56 @@ class NeonRushTheme {
     letterSpacing: -0.2,
     height: 1.4,
   );
-  
+
   static TextStyle get bodyLarge => GoogleFonts.jetBrainsMono(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: offWhite,
     height: 1.5,
   );
-  
+
   static TextStyle get bodyMedium => GoogleFonts.jetBrainsMono(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: offWhite,
     height: 1.5,
   );
-  
+
   static TextStyle get bodySmall => GoogleFonts.jetBrainsMono(
     fontSize: 12,
     fontWeight: FontWeight.w400,
     color: grayText,
     height: 1.4,
   );
-  
+
   static TextStyle get labelLarge => GoogleFonts.spaceGrotesk(
     fontSize: 14,
     fontWeight: FontWeight.w600,
     color: pureWhite,
     letterSpacing: 0.5,
   );
-  
+
   static TextStyle get labelMedium => GoogleFonts.spaceGrotesk(
     fontSize: 12,
     fontWeight: FontWeight.w500,
     color: offWhite,
     letterSpacing: 0.3,
   );
-  
+
   static TextStyle get monoLarge => GoogleFonts.jetBrainsMono(
     fontSize: 16,
     fontWeight: FontWeight.w500,
     color: neonGreen,
     height: 1.4,
   );
-  
+
   static TextStyle get monoMedium => GoogleFonts.jetBrainsMono(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: neonGreen,
     height: 1.4,
   );
-  
+
   static TextStyle get monoSmall => GoogleFonts.jetBrainsMono(
     fontSize: 12,
     fontWeight: FontWeight.w400,
@@ -141,41 +141,41 @@ class NeonRushTheme {
       offset: Offset.zero,
     ),
     BoxShadow(
-      color: Colors.black.withValues(alpha: 0.5),
+      color: Colors.black.withOpacity(0.5),
       blurRadius: 10,
       offset: const Offset(0, 4),
     ),
   ];
-  
+
   static List<BoxShadow> get subtleGlow => [
     BoxShadow(
-      color: neonGreen.withValues(alpha: 0.3),
+      color: neonGreen.withOpacity(0.3),
       blurRadius: 12,
       spreadRadius: 1,
     ),
     BoxShadow(
-      color: Colors.black.withValues(alpha: 0.3),
+      color: Colors.black.withOpacity(0.3),
       blurRadius: 6,
       offset: const Offset(0, 2),
     ),
   ];
-  
+
   static List<BoxShadow> get cardShadow => [
     BoxShadow(
-      color: Colors.black.withValues(alpha: 0.4),
+      color: Colors.black.withOpacity(0.4),
       blurRadius: 12,
       offset: const Offset(0, 4),
     ),
     BoxShadow(
-      color: neonGreen.withValues(alpha: 0.1),
+      color: neonGreen.withOpacity(0.1),
       blurRadius: 8,
       spreadRadius: 1,
     ),
   ];
-  
+
   static List<BoxShadow> get innerGlow => [
     BoxShadow(
-      color: neonGreen.withValues(alpha: 0.1),
+      color: neonGreen.withOpacity(0.1),
       blurRadius: 8,
       spreadRadius: -2,
     ),
@@ -190,15 +190,15 @@ class NeonRushTheme {
 
   // Borders
   static Border get neonBorder => Border.all(
-    color: neonGreen.withValues(alpha: 0.5),
+    color: neonGreen.withOpacity(0.5),
     width: 1.5,
   );
-  
+
   static Border get subtleBorder => Border.all(
     color: darkGray,
     width: 1,
   );
-  
+
   static Border get glowBorder => Border.all(
     color: neonGreen,
     width: 2,
@@ -230,7 +230,7 @@ class NeonRushTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: deepBlack,
-    
+
     colorScheme: const ColorScheme.dark(
       primary: neonGreen,
       secondary: Color(0xFF00D4AA),
@@ -244,7 +244,7 @@ class NeonRushTheme {
       error: error,
       onError: pureWhite,
     ),
-    
+
     textTheme: TextTheme(
       displayLarge: heading1,
       displayMedium: heading2,
@@ -262,7 +262,7 @@ class NeonRushTheme {
       labelMedium: labelMedium,
       labelSmall: monoSmall,
     ),
-    
+
     cardTheme: CardThemeData(
       color: charcoal,
       elevation: 0,
@@ -273,7 +273,7 @@ class NeonRushTheme {
       shadowColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
     ),
-    
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.transparent,
@@ -293,13 +293,13 @@ class NeonRushTheme {
           return deepBlack;
         }),
         overlayColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.pressed)) return neonGreen.withValues(alpha: 0.3);
-          if (states.contains(WidgetState.hovered)) return neonGreen.withValues(alpha: 0.1);
+          if (states.contains(WidgetState.pressed)) return neonGreen.withOpacity(0.3);
+          if (states.contains(WidgetState.hovered)) return neonGreen.withOpacity(0.1);
           return Colors.transparent;
         }),
       ),
     ),
-    
+
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: neonGreen,
@@ -310,7 +310,7 @@ class NeonRushTheme {
       ).copyWith(
         backgroundColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.hovered)) return neonGreenDim;
-          if (states.contains(WidgetState.pressed)) return neonGreen.withValues(alpha: 0.2);
+          if (states.contains(WidgetState.pressed)) return neonGreen.withOpacity(0.2);
           return Colors.transparent;
         }),
         side: WidgetStateProperty.resolveWith((states) {
@@ -319,7 +319,7 @@ class NeonRushTheme {
         }),
       ),
     ),
-    
+
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         foregroundColor: neonGreen,
@@ -333,7 +333,7 @@ class NeonRushTheme {
         }),
       ),
     ),
-    
+
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: charcoalLight,
@@ -362,11 +362,11 @@ class NeonRushTheme {
       hintStyle: bodySmall,
       floatingLabelStyle: labelMedium.copyWith(color: neonGreen),
     ),
-    
+
     chipTheme: ChipThemeData(
       backgroundColor: charcoalLight,
       selectedColor: neonGreenDim,
-      disabledColor: darkGray.withValues(alpha: 0.5),
+      disabledColor: darkGray.withOpacity(0.5),
       labelStyle: labelMedium,
       secondaryLabelStyle: labelMedium.copyWith(color: deepBlack),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -377,13 +377,13 @@ class NeonRushTheme {
       side: subtleBorder,
       brightness: Brightness.dark,
     ),
-    
+
     dividerTheme: DividerThemeData(
       color: darkGray,
       thickness: 1,
       space: spacingMD,
     ),
-    
+
     listTileTheme: ListTileThemeData(
       tileColor: Colors.transparent,
       selectedTileColor: neonGreenDim,
@@ -392,7 +392,7 @@ class NeonRushTheme {
       shape: RoundedRectangleBorder(borderRadius: cardRadius),
       contentPadding: const EdgeInsets.symmetric(horizontal: spacingMD, vertical: spacingSM),
     ),
-    
+
     dialogTheme: DialogThemeData(
       backgroundColor: charcoal,
       elevation: 0,
@@ -403,7 +403,7 @@ class NeonRushTheme {
       titleTextStyle: heading3,
       contentTextStyle: bodyMedium,
     ),
-    
+
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: charcoal,
       elevation: 0,
@@ -412,7 +412,7 @@ class NeonRushTheme {
       ),
       modalBackgroundColor: charcoal,
     ),
-    
+
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: charcoal,
       elevation: 0,
@@ -430,7 +430,7 @@ class NeonRushTheme {
         return IconThemeData(color: grayText, size: iconMD);
       }),
     ),
-    
+
     tabBarTheme: TabBarThemeData(
       labelColor: neonGreen,
       unselectedLabelColor: grayText,
@@ -443,7 +443,7 @@ class NeonRushTheme {
       unselectedLabelStyle: labelMedium,
       dividerColor: Colors.transparent,
     ),
-    
+
     sliderTheme: SliderThemeData(
       activeTrackColor: neonGreen,
       inactiveTrackColor: darkGray,
@@ -454,7 +454,7 @@ class NeonRushTheme {
       trackHeight: 4,
       thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
     ),
-    
+
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) return neonGreen;
@@ -466,7 +466,7 @@ class NeonRushTheme {
       }),
       trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
     ),
-    
+
     checkboxTheme: CheckboxThemeData(
       fillColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) return neonGreen;
@@ -479,20 +479,20 @@ class NeonRushTheme {
       }),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
     ),
-    
+
     radioTheme: RadioThemeData(
       fillColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) return neonGreen;
         return grayText;
       }),
     ),
-    
+
     progressIndicatorTheme: ProgressIndicatorThemeData(
       color: neonGreen,
       linearTrackColor: darkGray,
       circularTrackColor: darkGray,
     ),
-    
+
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
         color: charcoalLighter,
@@ -503,7 +503,7 @@ class NeonRushTheme {
       textStyle: bodySmall,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     ),
-    
+
     snackBarTheme: SnackBarThemeData(
       backgroundColor: charcoalLighter,
       contentTextStyle: bodyMedium,
@@ -515,7 +515,7 @@ class NeonRushTheme {
       ),
       elevation: 0,
     ),
-    
+
     extensions: <ThemeExtension<dynamic>>[
       _NeonRushExtension(),
     ],
@@ -525,7 +525,7 @@ class NeonRushTheme {
 class _NeonRushExtension extends ThemeExtension<_NeonRushExtension> {
   @override
   _NeonRushExtension copyWith() => _NeonRushExtension();
-  
+
   @override
   _NeonRushExtension lerp(ThemeExtension<_NeonRushExtension>? other, double t) => this;
 }

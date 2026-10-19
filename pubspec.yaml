@@ -12,6 +12,7 @@ dependencies:
 
   # Core & State Management
   riverpod: ^2.5.1
+  flutter_riverpod: ^2.5.1
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
   riverpod_annotation: ^2.5.0
@@ -42,6 +43,7 @@ dependencies:
   glassmorphism: ^3.0.0
   flutter_svg: ^2.0.10
   cached_network_image: ^3.3.1
+  google_fonts: ^6.2.1
 
   # Utilities
   uuid: ^4.4.0
@@ -63,6 +65,7 @@ dev_dependencies:
   freezed: ^2.5.2
   json_serializable: ^6.8.0
   drift_dev: ^2.18.0
+  riverpod_generator: ^2.4.0
   mocktail: ^1.0.3
 
 flutter:

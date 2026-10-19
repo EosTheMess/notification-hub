@@ -1,5 +1,7 @@
 // Main application providers using Riverpod
 
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,7 +30,7 @@ String deviceId(DeviceIdRef ref) {
 @riverpod
 DeviceModel currentDevice(CurrentDeviceRef ref) {
   final deviceId = ref.watch(deviceIdProvider);
-  return DeviceModel.create(
+  return createDevice(
     id: deviceId,
     name: 'My Device',
     platform: DevicePlatform.linux, // Will be overridden per platform
@@ -148,7 +150,7 @@ class NotificationRepository extends _$NotificationRepository {
       actions: Value(jsonEncode(notification.actions.map((a) => a.toJson()).toList())),
     );
     await db.insertNotification(companion);
-    
+
     // Also send to network if from local device
     if (notification.sourceDeviceId == ref.read(deviceIdProvider)) {
       await ref.read(networkServiceNotifierProvider.future)?.sendNotification(notification);
@@ -163,10 +165,10 @@ class NotificationRepository extends _$NotificationRepository {
   Future<void> dismissNotification(String id, String sourceDeviceId) async {
     final db = ref.read(appDatabaseProvider);
     await db.deleteNotification(id);
-    
+
     // Send dismiss action to source device if actionable
     final device = await db.getDevice(sourceDeviceId);
-    if (device?.permissions == DevicePermissions.actionable || device?.permissions == DevicePermissions.full) {
+    if (device?.permissions == 'actionable' || device?.permissions == 'full') {
       await ref.read(networkServiceNotifierProvider.future)?.sendAction(
         sourceDeviceId,
         id,
@@ -192,7 +194,7 @@ class LiveNotificationFeed extends _$LiveNotificationFeed {
   Stream<List<NotificationGroup>> build() {
     final db = ref.watch(appDatabaseProvider);
     final filterSettings = ref.watch(filterSettingsNotifierProvider);
-    
+
     return filterSettings.when(
       data: (settings) {
         return db.watchNotifications().map((notifications) {
@@ -221,12 +223,12 @@ class LiveNotificationFeed extends _$LiveNotificationFeed {
     for (final entity in notifications) {
       final model = _entityToModel(entity);
       final signature = _generateSignature(model);
-      
+
       if (groups.containsKey(signature)) {
         final group = groups[signature]!;
         final lastNotification = group.notifications.first;
         final timeDiff = model.timestamp.difference(lastNotification.timestamp).inMilliseconds;
-        
+
         if (timeDiff <= windowMs) {
           // Merge into existing group
           final updatedNotifications = [model, ...group.notifications];
@@ -371,7 +373,7 @@ class DeviceManager extends _$DeviceManager {
 
   Future<void> updateConnectionState(String id, DeviceConnectionState state) async {
     final db = ref.read(appDatabaseProvider);
-    await db.updateDeviceConnectionState(id, state);
+    await db.updateDeviceConnectionState(id, state.name);
   }
 
   DeviceModel _entityToModel(DeviceEntity entity) {

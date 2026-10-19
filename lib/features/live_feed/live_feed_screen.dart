@@ -1,5 +1,7 @@
 // Live Notification Feed Screen
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -79,7 +81,7 @@ class _LiveFeedScreenState extends ConsumerState<LiveFeedScreen> {
             ),
             border: Border(
               bottom: BorderSide(
-                color: NeonRushTheme.neonGreen.withValues(alpha: 0.2),
+                color: NeonRushTheme.neonGreen.withOpacity(0.2),
                 width: 1,
               ),
             ),
@@ -137,7 +139,7 @@ class _LiveFeedScreenState extends ConsumerState<LiveFeedScreen> {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: connectedCount > 0 ? NeonRushTheme.neonGreenDim : NeonRushTheme.darkGray.withValues(alpha: 0.5),
+                color: connectedCount > 0 ? NeonRushTheme.neonGreenDim : NeonRushTheme.darkGray.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: connectedCount > 0 ? NeonRushTheme.neonGreen : NeonRushTheme.darkGray,
@@ -361,7 +363,7 @@ class _NotificationGroupCardState extends ConsumerState<_NotificationGroupCard> 
         gradient: NeonRushTheme.cardGradient,
         borderRadius: NeonRushTheme.cardRadius,
         border: Border.all(
-          color: notification.isRead ? NeonRushTheme.darkGray : NeonRushTheme.neonGreen.withValues(alpha: 0.5),
+          color: notification.isRead ? NeonRushTheme.darkGray : NeonRushTheme.neonGreen.withOpacity(0.5),
           width: notification.isRead ? 1 : 1.5,
         ),
         boxShadow: notification.isRead ? NeonRushTheme.cardShadow : NeonRushTheme.neonGlow,
@@ -457,14 +459,14 @@ class _NotificationGroupCardState extends ConsumerState<_NotificationGroupCard> 
 
   Widget _buildAppIndicator(NotificationModel notification) {
     final platformColor = _getPlatformColor(notification.sourceDeviceId);
-    
+
     return Container(
       width: 44,
       height: 44,
       decoration: BoxDecoration(
-        color: platformColor.withValues(alpha: 0.2),
+        color: platformColor.withOpacity(0.2),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: platformColor.withValues(alpha: 0.5)),
+        border: Border.all(color: platformColor.withOpacity(0.5)),
       ),
       child: Icon(
         _getAppIcon(notification.appName),
@@ -655,14 +657,14 @@ class _ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDestructive = action.type == ActionType.dismiss;
-    
+
     return IconButton(
       onPressed: onPressed,
       style: IconButton.styleFrom(
-        backgroundColor: isDestructive ? NeonRushTheme.error.withValues(alpha: 0.2) : NeonRushTheme.charcoal,
+        backgroundColor: isDestructive ? NeonRushTheme.error.withOpacity(0.2) : NeonRushTheme.charcoal,
         foregroundColor: isDestructive ? NeonRushTheme.error : NeonRushTheme.neonGreen,
         side: BorderSide(
-          color: isDestructive ? NeonRushTheme.error : NeonRushTheme.neonGreen.withValues(alpha: 0.5),
+          color: isDestructive ? NeonRushTheme.error : NeonRushTheme.neonGreen.withOpacity(0.5),
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         padding: const EdgeInsets.all(12),

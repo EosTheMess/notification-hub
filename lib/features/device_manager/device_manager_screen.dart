@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 
 import '../../core/models/notification.dart';
 import '../../core/providers/app_providers.dart';
+import '../../shared/theme/neon_rush_theme.dart';
 
 class DeviceManagerScreen extends ConsumerStatefulWidget {
   const DeviceManagerScreen({super.key});
@@ -197,7 +198,7 @@ class _DeviceCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: device.connectionState == DeviceConnectionState.connected
-              ? NeonRushTheme.neonGreen.withValues(alpha: 0.5)
+              ? NeonRushTheme.neonGreen.withOpacity(0.5)
               : NeonRushTheme.darkGray,
         ),
         boxShadow: device.connectionState == DeviceConnectionState.connected
@@ -251,7 +252,7 @@ class _DeviceCard extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: device.connectionState == DeviceConnectionState.connected
                         ? NeonRushTheme.neonGreenDim
-                        : NeonRushTheme.darkGray.withValues(alpha: 0.5),
+                        : NeonRushTheme.darkGray.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -451,8 +452,7 @@ class _AddDeviceDialog extends ConsumerWidget {
     this.initialName,
     this.initialIp,
     this.initialPort,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -586,8 +586,7 @@ class _ConfirmDialog extends StatelessWidget {
     required this.confirmText,
     required this.cancelText,
     required this.onConfirm,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

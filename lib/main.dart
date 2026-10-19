@@ -147,13 +147,13 @@ class _MainShellState extends ConsumerState<MainShell> with TickerProviderStateM
         color: NeonRushTheme.charcoal,
         border: Border(
           top: BorderSide(
-            color: NeonRushTheme.neonGreen.withValues(alpha: 0.3),
+            color: NeonRushTheme.neonGreen.withOpacity(0.3),
             width: 1,
           ),
         ),
         boxShadow: [
           BoxShadow(
-            color: NeonRushTheme.neonGreen.withValues(alpha: 0.1),
+            color: NeonRushTheme.neonGreen.withOpacity(0.1),
             blurRadius: 20,
             spreadRadius: -5,
             offset: const Offset(0, -5),
@@ -228,7 +228,7 @@ class _QuickActionsSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: NeonRushTheme.charcoal,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        border: Border.all(color: NeonRushTheme.neonGreen.withValues(alpha: 0.3)),
+        border: Border.all(color: NeonRushTheme.neonGreen.withOpacity(0.3)),
         boxShadow: NeonRushTheme.cardShadow,
       ),
       child: Column(

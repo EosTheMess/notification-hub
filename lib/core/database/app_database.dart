@@ -1,7 +1,9 @@
 // Drift database schema for notification persistence
 
 import 'package:drift/drift.dart';
-import 'package:drift/wasm.dart';
+import 'package:drift/native.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 part 'app_database.g.dart';
@@ -34,13 +36,13 @@ class Notifications extends Table {
   @override
   Set<Column> get primaryKey => {id};
 
-  // Indexes for common queries - using proper Drift index syntax
+  // Indexes for common queries - proper Drift Index syntax
   @override
   List<Index> get indexes => [
-    Index(name: 'idx_notifications_device_time', columns: {sourceDeviceId, timestamp}, unique: false),
-    Index(name: 'idx_notifications_app_time', columns: {appName, timestamp}, unique: false),
-    Index(name: 'idx_notifications_read', columns: {isRead, timestamp}, unique: false),
-    Index(name: 'idx_notifications_unread_device', columns: {sourceDeviceId, isRead, timestamp}, unique: false),
+    Index('idx_notifications_device_time', [sourceDeviceId, OrderingTerm.desc(timestamp)]),
+    Index('idx_notifications_app_time', [appName, OrderingTerm.desc(timestamp)]),
+    Index('idx_notifications_read', [isRead, OrderingTerm.desc(timestamp)]),
+    Index('idx_notifications_unread_device', [sourceDeviceId, isRead, OrderingTerm.desc(timestamp)]),
   ];
 }
 
@@ -205,26 +207,26 @@ class AppDatabase extends _$AppDatabase {
   Future<DeviceEntity?> getDevice(String id) =>
       (select(devices)..where((t) => t.id.equals(id))).getSingleOrNull();
 
-  Stream<List<DeviceEntity>> watchDevices({DeviceConnectionState? state}) {
+  Stream<List<DeviceEntity>> watchDevices({String? state}) {
     var query = select(devices);
     if (state != null) {
-      query = query..where((t) => t.connectionState.equals(state.name));
+      query = query..where((t) => t.connectionState.equals(state));
     }
     return query.watch();
   }
 
-  Future<List<DeviceEntity>> getDevices({DeviceConnectionState? state}) {
+  Future<List<DeviceEntity>> getDevices({String? state}) {
     var query = select(devices);
     if (state != null) {
-      query = query..where((t) => t.connectionState.equals(state.name));
+      query = query..where((t) => t.connectionState.equals(state));
     }
     return query.get();
   }
 
-  Future<int> updateDeviceConnectionState(String id, DeviceConnectionState state) =>
+  Future<int> updateDeviceConnectionState(String id, String state) =>
       (update(devices)..where((t) => t.id.equals(id)))
           .write(DevicesCompanion(
-            connectionState: Value(state.name),
+            connectionState: Value(state),
             lastSeen: Value(DateTime.now()),
             updatedAt: Value(DateTime.now()),
           ));
@@ -307,6 +309,6 @@ LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'notification_hub.sqlite'));
-    return NativeDatabase(file);
+    return NativeDatabase.createInBackground(file);
   });
 }

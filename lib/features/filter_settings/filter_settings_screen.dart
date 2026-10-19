@@ -7,6 +7,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/models/notification.dart';
 import '../../core/providers/app_providers.dart';
+import '../../shared/theme/neon_rush_theme.dart';
 
 class FilterSettingsScreen extends ConsumerStatefulWidget {
   const FilterSettingsScreen({super.key});

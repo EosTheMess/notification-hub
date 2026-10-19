@@ -331,6 +331,7 @@ class NetworkService {
 
   BonsoirService? _bonsoirService;
   BonsoirBroadcast? _broadcast;
+  BonsoirDiscovery? _discovery;
   HttpServer? _server;
   StreamSubscription? _serverSubscription;
 
@@ -508,30 +509,33 @@ class NetworkService {
       },
     );
 
-    _broadcast = _bonsoirService!.broadcast();
+    // Start broadcasting
+    _broadcast = BonsoirBroadcast(service: _bonsoirService!);
     await _broadcast!.ready;
 
-    // Discover other services
-    final discovery = _bonsoirService!.discovery();
-    discovery.stream.listen((event) {
+    // Start discovery
+    _discovery = BonsoirDiscovery(type: _serviceType);
+    _discovery!.stream.listen((event) {
       if (event.type == BonsoirDiscoveryEventType.discoveryServiceFound) {
         _connectToService(event.service!);
       } else if (event.type == BonsoirDiscoveryEventType.discoveryServiceLost) {
         _handleServiceLost(event.service!);
       }
     });
-    await discovery.ready;
+    await _discovery!.ready;
   }
 
   Future<void> _stopDiscovery() async {
     await _broadcast?.stop();
-    await _bonsoirService?.dispose();
+    await _discovery?.stop();
+    _bonsoirService = null;
   }
 
   void _connectToService(BonsoirService service) {
     if (service.attributes['deviceId'] == _deviceId) return; // Skip self
 
-    final host = service.host?.address ?? '';
+    // Get the host address from the service
+    final host = service.ipAddresses.isNotEmpty ? service.ipAddresses.first : '';
     final port = service.port;
     if (host.isEmpty) return;
 
@@ -568,7 +572,7 @@ class NetworkService {
   }
 
   void _handleServiceLost(BonsoirService service) {
-    final host = service.host?.address ?? '';
+    final host = service.ipAddresses.isNotEmpty ? service.ipAddresses.first : '';
     if (host.isNotEmpty) {
       _connections.remove(host)?.sink.close();
     }
