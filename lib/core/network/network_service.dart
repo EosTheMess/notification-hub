@@ -83,7 +83,6 @@ sealed class NetworkMessage {
 }
 
 /// Notification message
-@immutable
 class NotificationMessage extends NetworkMessage {
   final NotificationModel notification;
 
@@ -112,7 +111,6 @@ class NotificationMessage extends NetworkMessage {
 }
 
 /// Batch notification message
-@immutable
 class NotificationBatchMessage extends NetworkMessage {
   final List<NotificationModel> notifications;
 
@@ -141,7 +139,6 @@ class NotificationBatchMessage extends NetworkMessage {
 }
 
 /// Action message (dismiss, reply, etc.)
-@immutable
 class ActionMessage extends NetworkMessage {
   final String notificationId;
   final String actionId;
@@ -178,7 +175,6 @@ class ActionMessage extends NetworkMessage {
 }
 
 /// Pairing request
-@immutable
 class PairingRequestMessage extends NetworkMessage {
   final PairingData pairingData;
 
@@ -207,7 +203,6 @@ class PairingRequestMessage extends NetworkMessage {
 }
 
 /// Pairing response
-@immutable
 class PairingResponseMessage extends NetworkMessage {
   final bool accepted;
   final PairingData? pairingData;
@@ -244,7 +239,6 @@ class PairingResponseMessage extends NetworkMessage {
 }
 
 /// Heartbeat message
-@immutable
 class HeartbeatMessage extends NetworkMessage {
   const HeartbeatMessage({
     required super.id,
@@ -268,7 +262,6 @@ class HeartbeatMessage extends NetworkMessage {
 }
 
 /// Device info message
-@immutable
 class DeviceInfoMessage extends NetworkMessage {
   final DeviceModel deviceInfo;
 
@@ -297,7 +290,6 @@ class DeviceInfoMessage extends NetworkMessage {
 }
 
 /// Error message
-@immutable
 class ErrorMessage extends NetworkMessage {
   final String code;
   final String message;
