@@ -33,7 +33,6 @@ enum MessageType {
 }
 
 /// Base message envelope
-@immutable
 sealed class NetworkMessage {
   final String id;
   final MessageType type;

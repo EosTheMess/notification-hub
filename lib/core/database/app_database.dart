@@ -203,7 +203,7 @@ class AppDatabase extends _$AppDatabase {
       (delete(devices)..where((t) => t.id.equals(id))).go();
 
   Future<DeviceEntity?> getDevice(String id) =>
-      (select(devices)...where((t) => t.id.equals(id))).getSingleOrNull();
+      (select(devices)..where((t) => t.id.equals(id))).getSingleOrNull();
 
   Stream<List<DeviceEntity>> watchDevices({DeviceConnectionState? state}) {
     var query = select(devices);
