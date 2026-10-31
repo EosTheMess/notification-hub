@@ -27,9 +27,6 @@ class _DeviceManagerScreenState extends ConsumerState<DeviceManagerScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(deviceManagerProvider.notifier).loadDevices();
-    });
   }
 
   @override
@@ -126,19 +123,12 @@ class _DeviceManagerScreenState extends ConsumerState<DeviceManagerScreen> {
   }
 
   Future<void> _showAddDeviceDialog() async {
-    final bool success = await showDialog(
+    await showDialog(
       context: context,
       builder: (context) => _AddDeviceDialog(
         onSave: _onSaveDevice,
       ),
-    ) as bool?;
-
-    if (success != false) {
-      // Device was added or updated
-      _deviceNameController.clear();
-      _deviceIpController.clear();
-      _devicePortController.clear();
-    }
+    );
   }
 
   void _onSaveDevice(DeviceModel device) {
@@ -180,11 +170,12 @@ class _DeviceManagerScreenState extends ConsumerState<DeviceManagerScreen> {
   }
 }
 
-class _DeviceCard extends ConsumerWidget {
+class _DeviceCard extends StatelessWidget {
   final DeviceModel device;
   final VoidCallback onDismiss;
 
   const _DeviceCard({
+    super.key,
     required this.device,
     required this.onDismiss,
   });
@@ -422,7 +413,7 @@ class _DeviceCard extends ConsumerWidget {
             ),
             const SizedBox(width: 4),
             InkWell(
-              onTap: () => _removeKeyword(keyword),
+              onTap: () {},
               child: Icon(
                 Icons.remove_circle_rounded,
                 size: 14,
@@ -434,25 +425,30 @@ class _DeviceCard extends ConsumerWidget {
       );
     }).toList();
   }
-
-  void _removeKeyword(String keyword) {
-    ref.read(deviceManagerProvider.notifier).removeKeyword(keyword);
-    setState(() {});
-  }
 }
 
-class _AddDeviceDialog extends ConsumerWidget {
+class _AddDeviceDialog extends StatefulWidget {
   final void Function(DeviceModel) onSave;
-  final String? initialName;
-  final String? initialIp;
-  final int? initialPort;
 
-  const _AddDeviceDialog({
-    required this.onSave,
-    this.initialName,
-    this.initialIp,
-    this.initialPort,
-  });
+  const _AddDeviceDialog({required this.onSave});
+
+  @override
+  State<_AddDeviceDialog> createState() => _AddDeviceDialogState();
+}
+
+class _AddDeviceDialogState extends State<_AddDeviceDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _deviceNameController = TextEditingController();
+  final _deviceIpController = TextEditingController();
+  final _devicePortController = TextEditingController();
+
+  @override
+  void dispose() {
+    _deviceNameController.dispose();
+    _deviceIpController.dispose();
+    _devicePortController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -468,21 +464,19 @@ class _AddDeviceDialog extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                initialName != null ? 'Update Device' : 'Add Device',
+                'Add Device',
                 style: NeonRushTheme.heading3,
               ),
               const SizedBox(height: 20),
               _buildTextField(
                 controller: _deviceNameController,
                 label: 'Device Name',
-                initialValue: initialName,
                 validator: (value) => value!.isEmpty ? 'Enter a name' : null,
               ),
               const SizedBox(height: 12),
               _buildTextField(
                 controller: _deviceIpController,
                 label: 'IP Address',
-                initialValue: initialIp,
                 validator: (value) {
                   if (value!.isEmpty) return 'Enter IP';
                   final parts = value.split('.');
@@ -494,7 +488,7 @@ class _AddDeviceDialog extends ConsumerWidget {
               _buildTextField(
                 controller: _devicePortController,
                 label: 'Port',
-                initialValue: initialPort != null ? initialPort.toString() : '8765',
+                initialValue: '8765',
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) return 'Enter port';
@@ -525,7 +519,7 @@ class _AddDeviceDialog extends ConsumerWidget {
                           lastSeen: DateTime.now(),
                           permissions: DevicePermissions.readOnly,
                         );
-                        onSave(device);
+                        widget.onSave(device);
                         Navigator.pop(context, true);
                       }
                     },
@@ -544,11 +538,13 @@ class _AddDeviceDialog extends ConsumerWidget {
     required TextEditingController controller,
     required String label,
     String? initialValue,
+    TextInputType? keyboardType,
     required String? Function(String?) validator,
   }) {
     return TextFormField(
       controller: controller,
       initialValue: initialValue,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
         labelStyle: NeonRushTheme.bodyMedium.copyWith(color: NeonRushTheme.offWhite),

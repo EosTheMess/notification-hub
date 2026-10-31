@@ -2,13 +2,14 @@
 
 import 'dart:convert';
 
+import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../core/database/app_database.dart';
-import '../core/models/notification.dart';
-import '../core/network/network_service.dart';
-import '../platform/linux_notification_listener.dart';
+import '../database/app_database.dart';
+import '../models/notification.dart';
+import '../network/network_service.dart';
+import '../../platform/linux_notification_listener.dart';
 
 part 'app_providers.g.dart';
 
@@ -131,11 +132,11 @@ class NotificationRepository extends _$NotificationRepository {
     final db = ref.read(appDatabaseProvider);
     final companion = NotificationsCompanion.insert(
       id: Value(notification.id),
-      sourceDeviceId: Value(notification.sourceDeviceId),
-      appName: Value(notification.appName),
-      title: Value(notification.title),
-      content: Value(notification.content),
-      timestamp: Value(notification.timestamp),
+      sourceDeviceId: notification.sourceDeviceId,
+      appName: notification.appName,
+      title: notification.title,
+      content: notification.content,
+      timestamp: notification.timestamp,
       isRead: Value(notification.isRead),
       hasAttachment: Value(notification.hasAttachment),
       attachmentPath: Value(notification.attachmentPath),
@@ -153,7 +154,7 @@ class NotificationRepository extends _$NotificationRepository {
 
     // Also send to network if from local device
     if (notification.sourceDeviceId == ref.read(deviceIdProvider)) {
-      await ref.read(networkServiceNotifierProvider.future)?.sendNotification(notification);
+      await ref.read(networkServiceNotifierProvider.notifier).sendNotification(notification);
     }
   }
 
@@ -169,7 +170,7 @@ class NotificationRepository extends _$NotificationRepository {
     // Send dismiss action to source device if actionable
     final device = await db.getDevice(sourceDeviceId);
     if (device?.permissions == 'actionable' || device?.permissions == 'full') {
-      await ref.read(networkServiceNotifierProvider.future)?.sendAction(
+      await ref.read(networkServiceNotifierProvider.notifier).sendAction(
         sourceDeviceId,
         id,
         'dismiss',
@@ -178,7 +179,7 @@ class NotificationRepository extends _$NotificationRepository {
   }
 
   Future<void> quickReply(String id, String sourceDeviceId, String replyText) async {
-    await ref.read(networkServiceNotifierProvider.future)?.sendAction(
+    await ref.read(networkServiceNotifierProvider.notifier).sendAction(
       sourceDeviceId,
       id,
       'reply',
@@ -331,12 +332,12 @@ class DeviceManager extends _$DeviceManager {
     final db = ref.read(appDatabaseProvider);
     await db.insertDevice(DevicesCompanion.insert(
       id: Value(device.id),
-      name: Value(device.name),
-      platform: Value(device.platform.name),
-      localIp: Value(device.localIp),
+      name: device.name,
+      platform: device.platform.name,
+      localIp: device.localIp,
       port: Value(device.port),
       connectionState: Value(device.connectionState.name),
-      lastSeen: Value(device.lastSeen),
+      lastSeen: device.lastSeen,
       permissions: Value(device.permissions.name),
       publicKey: Value(device.publicKey),
       metadata: Value(jsonEncode(device.metadata)),

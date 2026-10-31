@@ -22,10 +22,10 @@ android/app/key.properties
 
 # iOS
 ios/Pods/
-ios/Runner/Info.plist
 ios/*.xcworkspace
 ios/*.xcuserstate
 ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+ios/Flutter/
 
 # Linux (Desktop)
 build/linux/

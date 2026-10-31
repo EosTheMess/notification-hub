@@ -143,6 +143,7 @@ sealed class DeviceModel with _$DeviceModel {
 
 // Helper to create new devices with generated ID
 DeviceModel createDevice({
+  String? id,
   required String name,
   required DevicePlatform platform,
   required String localIp,
@@ -151,7 +152,7 @@ DeviceModel createDevice({
   String? publicKey,
 }) {
   return DeviceModel(
-    id: _uuid.v4(),
+    id: id ?? _uuid.v4(),
     name: name,
     platform: platform,
     localIp: localIp,
@@ -263,7 +264,7 @@ enum NotificationPriority {
 
 // Archive query parameters
 @freezed
-sealed class ArchiveQuery with _$ArchiveQuery {
+class ArchiveQuery with _$ArchiveQuery {
   const factory ArchiveQuery({
     String? searchText,
     List<String>? deviceIds,

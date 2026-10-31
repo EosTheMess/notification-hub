@@ -1,5 +1,7 @@
 // Drift database schema for notification persistence
 
+import 'dart:io';
+
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
@@ -36,13 +38,25 @@ class Notifications extends Table {
   @override
   Set<Column> get primaryKey => {id};
 
-  // Indexes for common queries - proper Drift Index syntax
+  // Indexes for common queries - proper Drift Index syntax (name, CREATE INDEX statement)
   @override
   List<Index> get indexes => [
-    Index('idx_notifications_device_time', [sourceDeviceId, OrderingTerm.desc(timestamp)]),
-    Index('idx_notifications_app_time', [appName, OrderingTerm.desc(timestamp)]),
-    Index('idx_notifications_read', [isRead, OrderingTerm.desc(timestamp)]),
-    Index('idx_notifications_unread_device', [sourceDeviceId, isRead, OrderingTerm.desc(timestamp)]),
+    Index(
+      'idx_notifications_device_time',
+      'CREATE INDEX idx_notifications_device_time ON notifications(sourceDeviceId, timestamp DESC)',
+    ),
+    Index(
+      'idx_notifications_app_time',
+      'CREATE INDEX idx_notifications_app_time ON notifications(appName, timestamp DESC)',
+    ),
+    Index(
+      'idx_notifications_read',
+      'CREATE INDEX idx_notifications_read ON notifications(isRead, timestamp DESC)',
+    ),
+    Index(
+      'idx_notifications_unread_device',
+      'CREATE INDEX idx_notifications_unread_device ON notifications(sourceDeviceId, isRead, timestamp DESC)',
+    ),
   ];
 }
 

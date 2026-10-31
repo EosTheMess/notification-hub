@@ -515,7 +515,7 @@ class NetworkService {
 
     // Start discovery
     _discovery = BonsoirDiscovery(type: _serviceType);
-    _discovery!.stream.listen((event) {
+    _discovery!.eventStream!.listen((event) {
       if (event.type == BonsoirDiscoveryEventType.discoveryServiceFound) {
         _connectToService(event.service!);
       } else if (event.type == BonsoirDiscoveryEventType.discoveryServiceLost) {
@@ -534,8 +534,8 @@ class NetworkService {
   void _connectToService(BonsoirService service) {
     if (service.attributes['deviceId'] == _deviceId) return; // Skip self
 
-    // Get the host address from the service
-    final host = service.ipAddresses.isNotEmpty ? service.ipAddresses.first : '';
+    // Get the host address from the resolved service (bonsoir 5.x resolves during discovery)
+    final host = (service is ResolvedBonsoirService ? service.host : null) ?? '';
     final port = service.port;
     if (host.isEmpty) return;
 
@@ -572,8 +572,8 @@ class NetworkService {
   }
 
   void _handleServiceLost(BonsoirService service) {
-    final host = service.ipAddresses.isNotEmpty ? service.ipAddresses.first : '';
-    if (host.isNotEmpty) {
+    final host = (service is ResolvedBonsoirService ? service.host : null);
+    if (host != null && host.isNotEmpty) {
       _connections.remove(host)?.sink.close();
     }
   }

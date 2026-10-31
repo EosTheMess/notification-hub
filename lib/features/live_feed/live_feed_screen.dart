@@ -569,7 +569,7 @@ class _NotificationGroupCardState extends ConsumerState<_NotificationGroupCard> 
         break;
       case ActionType.custom:
         // Send custom action to source device
-        ref.read(networkServiceNotifierProvider.future)?.sendAction(
+        ref.read(networkServiceNotifierProvider.notifier).sendAction(
           notification.sourceDeviceId,
           notification.id,
           action.id,

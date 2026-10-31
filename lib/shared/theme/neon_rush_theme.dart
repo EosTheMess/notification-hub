@@ -189,17 +189,17 @@ class NeonRushTheme {
   static const BorderRadius avatarRadius = BorderRadius.all(Radius.circular(12));
 
   // Borders
-  static Border get neonBorder => Border.all(
+  static BorderSide get neonBorder => BorderSide(
     color: neonGreen.withOpacity(0.5),
     width: 1.5,
   );
 
-  static Border get subtleBorder => Border.all(
+  static BorderSide get subtleBorder => BorderSide(
     color: darkGray,
     width: 1,
   );
 
-  static Border get glowBorder => Border.all(
+  static BorderSide get glowBorder => BorderSide(
     color: neonGreen,
     width: 2,
   );
@@ -263,7 +263,7 @@ class NeonRushTheme {
       labelSmall: monoSmall,
     ),
 
-    cardTheme: CardThemeData(
+    cardTheme: CardTheme(
       color: charcoal,
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -312,10 +312,6 @@ class NeonRushTheme {
           if (states.contains(WidgetState.hovered)) return neonGreenDim;
           if (states.contains(WidgetState.pressed)) return neonGreen.withOpacity(0.2);
           return Colors.transparent;
-        }),
-        side: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.hovered)) return glowBorder;
-          return neonBorder;
         }),
       ),
     ),
@@ -393,7 +389,7 @@ class NeonRushTheme {
       contentPadding: const EdgeInsets.symmetric(horizontal: spacingMD, vertical: spacingSM),
     ),
 
-    dialogTheme: DialogThemeData(
+    dialogTheme: DialogTheme(
       backgroundColor: charcoal,
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -431,7 +427,7 @@ class NeonRushTheme {
       }),
     ),
 
-    tabBarTheme: TabBarThemeData(
+    tabBarTheme: TabBarTheme(
       labelColor: neonGreen,
       unselectedLabelColor: grayText,
       indicator: BoxDecoration(
@@ -473,10 +469,7 @@ class NeonRushTheme {
         return Colors.transparent;
       }),
       checkColor: WidgetStateProperty.all(deepBlack),
-      side: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return BorderSide(color: neonGreen, width: 2);
-        return subtleBorder;
-      }),
+      side: subtleBorder,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
     ),
 
