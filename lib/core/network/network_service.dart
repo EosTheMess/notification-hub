@@ -552,13 +552,11 @@ class NetworkService {
           try {
             final json = jsonDecode(data as String);
             final message = NetworkMessage.fromJson(json);
-            if (message != null) {
-              final deviceId = message.sourceDeviceId;
-              if (_connections[host] != null && deviceId != host) {
-                _connections[deviceId] = _connections.remove(host)!;
-              }
-              _messageController.add(message);
+            final deviceId = message.sourceDeviceId;
+            if (_connections[host] != null && deviceId != host) {
+              _connections[deviceId] = _connections.remove(host)!;
             }
+            _messageController.add(message);
           } catch (e) {
             print('Error parsing incoming message: $e');
           }

@@ -3,8 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:intl/intl.dart';
 
 import '../../core/models/notification.dart';
 import '../../core/providers/app_providers.dart';
@@ -18,11 +16,9 @@ class DeviceManagerScreen extends ConsumerStatefulWidget {
 }
 
 class _DeviceManagerScreenState extends ConsumerState<DeviceManagerScreen> {
-  final _formKey = GlobalKey<FormState>();
   final _deviceNameController = TextEditingController();
   final _deviceIpController = TextEditingController();
   final _devicePortController = TextEditingController();
-  bool _isLoading = false;
 
   @override
   void initState() {

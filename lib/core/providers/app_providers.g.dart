@@ -6,7 +6,7 @@ part of 'app_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appDatabaseHash() => r'68c9ad772c198d1a34d2dcccc0a6a35f43092fd5';
+String _$appDatabaseHash() => r'18ce5c8c4d8ddbfe5a7d819d8fb7d5aca76bf416';
 
 /// Database provider
 ///
@@ -24,7 +24,7 @@ final appDatabaseProvider = AutoDisposeProvider<AppDatabase>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AppDatabaseRef = AutoDisposeProviderRef<AppDatabase>;
-String _$deviceIdHash() => r'd2843861c07a7562778ceaefc64c74622dcff817';
+String _$deviceIdHash() => r'072c3f568dc84f87de45eccb43643e645b0ea154';
 
 /// Current device ID provider
 ///
@@ -42,7 +42,7 @@ final deviceIdProvider = AutoDisposeProvider<String>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DeviceIdRef = AutoDisposeProviderRef<String>;
-String _$currentDeviceHash() => r'f33d069a611096005994450f81a85f8c2fee78f4';
+String _$currentDeviceHash() => r'0d70b3306aa7ac46e6d6b524d4c7d26d2916aeba';
 
 /// Current device model provider
 ///
@@ -100,7 +100,7 @@ final networkServiceNotifierProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$NetworkServiceNotifier = AutoDisposeAsyncNotifier<NetworkService?>;
 String _$notificationRepositoryHash() =>
-    r'f1dca31b6a0bbf50b771b729418976ac998e907c';
+    r'581851508d7c975196438aa2fac05585ab7b8916';
 
 /// Notification repository provider
 ///
@@ -119,7 +119,7 @@ final notificationRepositoryProvider =
 
 typedef _$NotificationRepository = AutoDisposeAsyncNotifier<void>;
 String _$liveNotificationFeedHash() =>
-    r'e2493e13047f332098e70e195b945e9fa6d4f451';
+    r'8730012dac4993b3abb2216a1160494f455fcdbd';
 
 /// Live notification feed provider with deduplication
 ///
@@ -156,7 +156,7 @@ final deviceManagerProvider = AutoDisposeStreamNotifierProvider<DeviceManager,
 );
 
 typedef _$DeviceManager = AutoDisposeStreamNotifier<List<DeviceModel>>;
-String _$archiveProviderHash() => r'235e17c865be4c2b0792090961be7f85d4febf6c';
+String _$archiveProviderHash() => r'4b1575e8dad8b99667c627a4d3095e7301a7ff92';
 
 /// Copied from Dart SDK
 class _SystemHash {

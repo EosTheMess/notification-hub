@@ -2,7 +2,6 @@
 // This file should be placed in: lib/platform/linux_notification_listener.dart
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:dbus/dbus.dart';
 import 'package:riverpod/riverpod.dart';
@@ -78,7 +77,6 @@ class LinuxNotificationListener {
     final bodyText = body[4].toNative() as String;
     final actions = body[5].toNative() as List;
     final hints = body[6].toNative() as Map;
-    final expireTimeout = body[7].toNative() as int;
 
     // Check for attachment in hints
     var hasAttachment = false;

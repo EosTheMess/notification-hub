@@ -3,25 +3,24 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../database/app_database.dart';
 import '../models/notification.dart';
 import '../network/network_service.dart';
-import '../../platform/linux_notification_listener.dart';
 
 part 'app_providers.g.dart';
 
 /// Database provider
 @riverpod
-AppDatabase appDatabase(AppDatabaseRef ref) {
+AppDatabase appDatabase(Ref ref) {
   return AppDatabase();
 }
 
 /// Current device ID provider
 @riverpod
-String deviceId(DeviceIdRef ref) {
+String deviceId(Ref ref) {
   // In a real app, this would be loaded from secure storage
   // For now, generate a consistent ID based on platform
   return 'device_${DateTime.now().millisecondsSinceEpoch}';
@@ -29,7 +28,7 @@ String deviceId(DeviceIdRef ref) {
 
 /// Current device model provider
 @riverpod
-DeviceModel currentDevice(CurrentDeviceRef ref) {
+DeviceModel currentDevice(Ref ref) {
   final deviceId = ref.watch(deviceIdProvider);
   return createDevice(
     id: deviceId,
@@ -282,7 +281,9 @@ class LiveNotificationFeed extends _$LiveNotificationFeed {
       supportsQuickReply: entity.supportsQuickReply,
       quickReplyPlaceholder: entity.quickReplyPlaceholder,
       quickReplyChoices: _decodeJsonList(entity.quickReplyChoices ?? '[]'),
-      actions: _decodeJsonList(entity.actions).map((a) => NotificationAction.fromJson(a as Map<String, dynamic>)).toList(),
+      actions: _decodeJsonList(entity.actions)
+          .map((a) => NotificationAction.fromJson(jsonDecode(a) as Map<String, dynamic>))
+          .toList(),
     );
   }
 
@@ -450,7 +451,9 @@ class ArchiveProvider extends _$ArchiveProvider {
       supportsQuickReply: entity.supportsQuickReply,
       quickReplyPlaceholder: entity.quickReplyPlaceholder,
       quickReplyChoices: _decodeJsonList(entity.quickReplyChoices ?? '[]'),
-      actions: _decodeJsonList(entity.actions).map((a) => NotificationAction.fromJson(a as Map<String, dynamic>)).toList(),
+      actions: _decodeJsonList(entity.actions)
+          .map((a) => NotificationAction.fromJson(jsonDecode(a) as Map<String, dynamic>))
+          .toList(),
     );
   }
 

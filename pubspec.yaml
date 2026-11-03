@@ -29,33 +29,16 @@ dependencies:
   path: ^1.9.0
 
   # Platform Channels & Permissions
-  permission_handler: ^11.3.1
-  device_info_plus: ^10.1.0
-  package_info_plus: ^8.0.2
-
-  # QR Code & Pairing
-  mobile_scanner: ^5.1.1
-  qr_flutter: ^4.1.0
+  dbus: ^0.7.12          # Linux D-Bus notification listener
 
   # UI & Animation
   flutter_animate: ^4.5.0
-  shimmer: ^3.0.0
-  glassmorphism: ^3.0.0
-  flutter_svg: ^2.0.10
-  cached_network_image: ^3.3.1
   google_fonts: ^6.2.1
 
   # Utilities
   uuid: ^4.4.0
   intl: ^0.19.0
   collection: ^1.18.0
-  equatable: ^2.0.5
-  logger: ^2.4.0
-  connectivity_plus: ^6.0.3
-
-  # Background Services
-  workmanager: ^0.5.2
-  flutter_local_notifications: ^17.2.2
 
 dev_dependencies:
   flutter_test:
@@ -70,16 +53,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/fonts/
-  fonts:
-    - family: JetBrainsMono
-      fonts:
-        - asset: assets/fonts/JetBrainsMono-Regular.ttf
-        - asset: assets/fonts/JetBrainsMono-Bold.ttf
-          weight: 700
-    - family: SpaceGrotesk
-      fonts:
-        - asset: assets/fonts/SpaceGrotesk-Regular.ttf
-        - asset: assets/fonts/SpaceGrotesk-Bold.ttf
-          weight: 700

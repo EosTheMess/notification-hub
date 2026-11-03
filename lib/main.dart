@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import 'core/providers/app_providers.dart';
 import 'shared/theme/neon_rush_theme.dart';
 import 'features/live_feed/live_feed_screen.dart';
 import 'features/device_manager/device_manager_screen.dart';
