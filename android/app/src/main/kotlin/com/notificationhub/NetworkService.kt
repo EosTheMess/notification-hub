@@ -42,7 +42,7 @@ class NetworkService : Service() {
         super.onDestroy()
         isRunning = false
         webSocket?.close(1000, "Service destroyed")
-        client?.dispatcher().executorService?.shutdown()
+        client?.dispatcher?.executorService?.shutdown()
         Log.d("NetworkService", "NetworkService destroyed")
     }
 
@@ -86,7 +86,7 @@ class NetworkService : Service() {
     private fun sendDeviceInfo() {
         val json = JSONObject().apply {
             put("type", "device_info")
-            put("deviceId", getDeviceId())
+            put("deviceId", generateDeviceId())
             put("deviceName", "Android Device")
             put("platform", "android")
             put("timestamp", System.currentTimeMillis())
@@ -115,7 +115,7 @@ class NetworkService : Service() {
         val response = JSONObject().apply {
             put("type", "pairing_response")
             put("accepted", true)
-            put("deviceId", getDeviceId())
+            put("deviceId", generateDeviceId())
         }
         webSocket?.send(response.toString())
     }
@@ -129,7 +129,7 @@ class NetworkService : Service() {
         // Handle actions like dismiss, reply
     }
 
-    private fun getDeviceId(): String {
+    private fun generateDeviceId(): String {
         val prefs = getSharedPreferences("notification_hub", MODE_PRIVATE)
         var deviceId = prefs.getString("device_id", null)
         if (deviceId == null) {

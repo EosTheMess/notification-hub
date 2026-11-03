@@ -32,8 +32,8 @@ class NotificationReceiver : BroadcastReceiver() {
 // Companion class for sending broadcasts
 object NotificationBroadcaster {
     fun sendNotification(context: Context, notificationJson: String) {
-        val intent = Intent(ACTION_NOTIFICATION_RECEIVED)
-        intent.putExtra(EXTRA_NOTIFICATION_DATA, notificationJson)
+        val intent = Intent(NotificationReceiver.ACTION_NOTIFICATION_RECEIVED)
+        intent.putExtra(NotificationReceiver.EXTRA_NOTIFICATION_DATA, notificationJson)
         intent.setPackage(context.packageName)
         context.sendBroadcast(intent)
     }

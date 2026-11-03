@@ -3,6 +3,8 @@
 
 package com.notificationhub
 
+import android.app.Notification
+import android.app.PendingIntent
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.os.Bundle
@@ -93,7 +95,7 @@ class NotificationListenerService : NotificationListenerService() {
         // Create notification JSON
         val notificationJson = JSONObject().apply {
             put("id", java.util.UUID.randomUUID().toString())
-            put("sourceDeviceId", getDeviceId())
+            put("sourceDeviceId", generateDeviceId())
             put("appName", appName)
             put("title", title)
             put("content", text)
@@ -146,7 +148,7 @@ class NotificationListenerService : NotificationListenerService() {
     }
 
     fun dismissNotification(packageName: String, notificationId: Int) {
-        cancelNotification(packageName, notificationId)
+        cancelNotification(packageName, null, notificationId)
     }
 
     fun replyToNotification(packageName: String, notificationId: Int, replyText: String) {
@@ -163,7 +165,7 @@ class NotificationListenerService : NotificationListenerService() {
         }
     }
 
-    private fun getDeviceId(): String {
+    private fun generateDeviceId(): String {
         val prefs = getSharedPreferences("notification_hub", MODE_PRIVATE)
         var deviceId = prefs.getString("device_id", null)
         if (deviceId == null) {

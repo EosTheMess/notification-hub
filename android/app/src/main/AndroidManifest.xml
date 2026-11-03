@@ -33,7 +33,7 @@
 
     <application
         android:label="Notification Hub"
-        android:name="${applicationClass}"
+        android:name=".MainActivity"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:allowBackup="false"
@@ -46,11 +46,11 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LauncherTheme"
-            android:configChanges="orientation|keyboardHidden|keyboardSize|screenSize|smallestScreenSize|screenLayout|density|uiMode"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|density|uiMode"
             android:windowSoftInputMode="adjustResize">
             
             <intent-filter android:action="android.intent.action.MAIN">
-                <category android:category="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -61,7 +61,7 @@
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
             android:exported="true">
             <intent-filter android:action="android.service.notification.NotificationListenerService">
-                <category android:category="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
 
@@ -75,7 +75,9 @@
         <receiver
             android:name=".NotificationReceiver"
             android:exported="false">
-            <intent-filter android:action="com.notificationhub.NOTIFICATION_RECEIVED" />
+            <intent-filter android:action="com.notificationhub.NOTIFICATION_RECEIVED">
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </receiver>
 
     </application>
